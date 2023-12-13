@@ -1,0 +1,15 @@
+server:
+  port: 8080
+  servlet:
+    contextPath: /api
+---
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  h2:
+    console:
+      enabled: true
+
