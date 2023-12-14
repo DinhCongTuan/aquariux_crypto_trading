@@ -4,6 +4,7 @@ import com.tuandc.interview.aquariux_crypto_trading.entity.CryptoCurrencyWalletE
 import com.tuandc.interview.aquariux_crypto_trading.entity.UserEntity;
 import com.tuandc.interview.aquariux_crypto_trading.exception.BadParameterException;
 import com.tuandc.interview.aquariux_crypto_trading.exception.NotFoundEntityException;
+import com.tuandc.interview.aquariux_crypto_trading.model.CryptoCurrencyWallet;
 import com.tuandc.interview.aquariux_crypto_trading.model.CurrencyType;
 import com.tuandc.interview.aquariux_crypto_trading.model.Transaction;
 import com.tuandc.interview.aquariux_crypto_trading.model.User;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -67,6 +69,12 @@ public class UserService {
     }
 
     private User convertToDTO(UserEntity entity) {
-        return new User(entity.getUserId(), entity.getUsername(), entity.getWalletBalance());
+        List<CryptoCurrencyWallet> cryptoCurrencyWallets = entity.getCryptoWallets()
+                .stream().map(CryptoCurrencyWallet::new)
+                .toList();
+        return new User(entity.getUserId(),
+                        entity.getUsername(),
+                        entity.getWalletBalance(),
+                        cryptoCurrencyWallets);
     }
 }

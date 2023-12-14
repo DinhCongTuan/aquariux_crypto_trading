@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 public class Transaction {
 
     private Long transactionId;
-    private Long userId;
     private CurrencyType currencyType;
     private TransactionType transactionType;
     private BigDecimal amount;

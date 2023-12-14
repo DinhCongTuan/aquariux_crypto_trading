@@ -6,7 +6,6 @@ import com.tuandc.interview.aquariux_crypto_trading.entity.TransactionEntity;
 import com.tuandc.interview.aquariux_crypto_trading.entity.UserEntity;
 import com.tuandc.interview.aquariux_crypto_trading.exception.BadParameterException;
 import com.tuandc.interview.aquariux_crypto_trading.exception.NotFoundEntityException;
-import com.tuandc.interview.aquariux_crypto_trading.model.CurrencyType;
 import com.tuandc.interview.aquariux_crypto_trading.model.TradeRequest;
 import com.tuandc.interview.aquariux_crypto_trading.model.Transaction;
 import com.tuandc.interview.aquariux_crypto_trading.model.TransactionType;
@@ -20,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -82,7 +82,6 @@ public class TradeService {
             walletEntity.setBalance(walletEntity.getBalance().subtract(totalPrice)); // wallet balance - price
         }
         userEntity.setCryptoWallets(List.of(walletEntity));
-//        walletRepository.save(walletEntity);
         TransactionEntity transactionEntity = new TransactionEntity();
         transactionEntity.setAmount(tradeRequest.getAmount());
         transactionEntity.setTransactionType(tradeRequest.getTransactionType());
@@ -91,7 +90,8 @@ public class TradeService {
         transactionEntity.setUser(userEntity);
         transactionEntity.setTotalPrice(totalPrice);
         transactionEntity.setPricePerUnit(unitPrice);
-
+        transactionEntity.setTimestamp(LocalDateTime.now());
+        transactionEntity.setPriceAggregation(priceAggregation);
         transactionRepository.save(transactionEntity);
     }
 
