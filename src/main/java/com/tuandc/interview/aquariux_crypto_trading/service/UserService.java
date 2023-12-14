@@ -61,7 +61,8 @@ public class UserService {
     }
 
     public Page<Transaction> getUserTradingHistory(Long userId, int page, int size) {
-        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new NotFoundEntityException("user not found"));
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundEntityException("user not found"));
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("timestamp").descending());
         return tradeService.getUserTransactionHistory(user.getUserId(), pageable);
