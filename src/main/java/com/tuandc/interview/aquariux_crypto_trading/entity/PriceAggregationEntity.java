@@ -1,6 +1,5 @@
 package com.tuandc.interview.aquariux_crypto_trading.entity;
 
-import com.tuandc.interview.aquariux_crypto_trading.model.CurrencyType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,8 +18,8 @@ public class PriceAggregationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long aggregationId;
 
-    @Enumerated(EnumType.STRING)
-    private CurrencyType currencyType; // BTC, ETH, etc.
+//    @Enumerated(EnumType.STRING)
+    private String currencyType; // ETHUSDT, BCTUSDT, etc.
 
     private BigDecimal bidPrice;
 

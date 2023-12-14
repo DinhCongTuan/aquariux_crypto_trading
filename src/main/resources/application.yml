@@ -12,4 +12,22 @@ spring:
   h2:
     console:
       enabled: true
+---
+api:
+  binance:
+    url: https://api.binance.com/api/v3/ticker/bookTicker
+  huobi:
+    url: https://api.huobi.pro/market/tickers
 
+---
+logging:
+  level:
+    com:
+      tuandc:
+        interview:
+          hrs_hotel_booking:
+            configuration: INFO
+
+  # Configure logging to output to the console
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{0} - %msg%n"
