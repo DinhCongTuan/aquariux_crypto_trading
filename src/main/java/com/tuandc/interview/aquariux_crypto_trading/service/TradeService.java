@@ -5,16 +5,21 @@ import com.tuandc.interview.aquariux_crypto_trading.entity.TransactionEntity;
 import com.tuandc.interview.aquariux_crypto_trading.entity.UserEntity;
 import com.tuandc.interview.aquariux_crypto_trading.exception.BadParameterException;
 import com.tuandc.interview.aquariux_crypto_trading.exception.NotFoundEntityException;
+import com.tuandc.interview.aquariux_crypto_trading.model.CurrencyType;
 import com.tuandc.interview.aquariux_crypto_trading.model.TradeRequest;
+import com.tuandc.interview.aquariux_crypto_trading.model.Transaction;
 import com.tuandc.interview.aquariux_crypto_trading.model.TransactionType;
 import com.tuandc.interview.aquariux_crypto_trading.repository.PriceAggregationRepository;
 import com.tuandc.interview.aquariux_crypto_trading.repository.TransactionRepository;
 import com.tuandc.interview.aquariux_crypto_trading.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Service
 public class TradeService {
@@ -48,12 +53,19 @@ public class TradeService {
         if (TransactionType.BUY == tradeRequest.getTransactionType()) {
             unitPrice = priceAggregation.getAskPrice();
             totalPrice = unitPrice.multiply(tradeRequest.getAmount()); // amount * unit
+
             BigDecimal balance = userEntity.getWalletBalance();
+            if (balance.compareTo(totalPrice) < 0) {
+                throw new BadParameterException("Not enough MONEY in the wallet to perform the BUY transaction");
+            }
             userEntity.setWalletBalance(balance.subtract(totalPrice)); // balance - price
         } else { // SELL
             unitPrice = priceAggregation.getBidPrice();
             totalPrice = unitPrice.multiply(tradeRequest.getAmount());
             BigDecimal balance = userEntity.getWalletBalance();
+            if (balance.compareTo(totalPrice) < 0) {
+                throw new BadParameterException("Not enough COIN in the wallet to perform the SELL transaction");
+            }
             userEntity.setWalletBalance(balance.add(totalPrice)); // balance + price
         }
         TransactionEntity transactionEntity = new TransactionEntity();
@@ -66,6 +78,28 @@ public class TradeService {
         transactionEntity.setPricePerUnit(unitPrice);
 
         transactionRepository.save(transactionEntity);
+    }
+
+    public Page<Transaction> getUserTransactionHistory(Long userId, Pageable pageable) {
+        // Assuming you have a method to convert entities to DTOs
+        // This assumes that the conversion logic exists
+        return transactionRepository.findByUserUserId(userId, pageable)
+                .map(this::convertEntityToDTO);
+    }
+
+    private Transaction convertEntityToDTO(TransactionEntity entity) {
+
+        // Map entity fields to DTO fields
+        Transaction dto = new Transaction();
+        dto.setTransactionId(entity.getTransactionId());
+        dto.setAmount(entity.getAmount());
+        dto.setCurrencyType(entity.getCurrencyType());
+        dto.setTransactionType(entity.getTransactionType());
+        dto.setPricePerUnit(entity.getPricePerUnit());
+        dto.setTotalPrice(entity.getTotalPrice());
+        dto.setTimestamp(entity.getTimestamp());
+
+        return dto;
     }
 
     private boolean isValidTradeRequest(TradeRequest tradeRequest) {

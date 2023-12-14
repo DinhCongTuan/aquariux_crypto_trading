@@ -31,3 +31,8 @@ logging:
   # Configure logging to output to the console
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{0} - %msg%n"
+
+---
+springdoc:
+  api-docs:
+    path: /api-docs
