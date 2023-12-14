@@ -22,7 +22,11 @@ public class TransactionEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private UserEntity userEntity;
+    private UserEntity user;
+
+    @ManyToOne
+    @JoinColumn(name = "price_aggregation_id")
+    private PriceAggregationEntity priceAggregation;
 
     @Enumerated(EnumType.STRING)
     private CurrencyType currencyType; // BTC, ETH, etc.

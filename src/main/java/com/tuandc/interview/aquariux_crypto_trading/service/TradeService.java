@@ -61,7 +61,7 @@ public class TradeService {
         transactionEntity.setTransactionType(tradeRequest.getTransactionType());
         transactionEntity.setCurrencyType(tradeRequest.getCurrencyPair());
         transactionEntity.setAmount(tradeRequest.getAmount());
-        transactionEntity.setUserEntity(userEntity);
+        transactionEntity.setUser(userEntity);
         transactionEntity.setTotalPrice(totalPrice);
         transactionEntity.setPricePerUnit(unitPrice);
 

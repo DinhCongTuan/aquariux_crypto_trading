@@ -48,14 +48,6 @@ public class PriceAggregationService {
                 .toList();
     }
 
-    private PriceAggregation convertToDTO(PriceAggregationEntity entity) {
-        return new PriceAggregation(
-                entity.getCurrencyType(),
-                entity.getBidPrice(),
-                entity.getAskPrice(),
-                entity.getTimestamp());
-    }
-
     @Transactional
     public void processAndStoreAggregatedPrices() {
 
@@ -136,5 +128,13 @@ public class PriceAggregationService {
         // Implement your logic to determine the best ask price
         // just return the lower ask price
         return binanceAskPrice.compareTo(huobiAskPrice) <= 0 ? binanceAskPrice : huobiAskPrice;
+    }
+
+    private PriceAggregation convertToDTO(PriceAggregationEntity entity) {
+        return new PriceAggregation(
+                entity.getCurrencyType(),
+                entity.getBidPrice(),
+                entity.getAskPrice(),
+                entity.getTimestamp());
     }
 }
