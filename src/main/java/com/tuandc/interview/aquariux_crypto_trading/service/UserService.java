@@ -1,12 +1,12 @@
 package com.tuandc.interview.aquariux_crypto_trading.service;
 
-import com.tuandc.interview.aquariux_crypto_trading.entity.TransactionEntity;
+import com.tuandc.interview.aquariux_crypto_trading.entity.CryptoCurrencyWalletEntity;
 import com.tuandc.interview.aquariux_crypto_trading.entity.UserEntity;
 import com.tuandc.interview.aquariux_crypto_trading.exception.BadParameterException;
 import com.tuandc.interview.aquariux_crypto_trading.exception.NotFoundEntityException;
+import com.tuandc.interview.aquariux_crypto_trading.model.CurrencyType;
 import com.tuandc.interview.aquariux_crypto_trading.model.Transaction;
 import com.tuandc.interview.aquariux_crypto_trading.model.User;
-import com.tuandc.interview.aquariux_crypto_trading.repository.TransactionRepository;
 import com.tuandc.interview.aquariux_crypto_trading.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Optional;
 
 @Service
@@ -44,7 +45,9 @@ public class UserService {
         UserEntity newUser = new UserEntity();
         newUser.setUsername(username);
         newUser.setWalletBalance(new BigDecimal(INIT_WALLET_BALANCE)); // Set the initial balance
-
+        // init crypto-currency-wallets
+        newUser.setCryptoWallets(Arrays.asList(new CryptoCurrencyWalletEntity(CurrencyType.BTCUSDT, newUser),
+                                                new CryptoCurrencyWalletEntity(CurrencyType.ETHUSDT, newUser)));
         // Save the user to the database
         return convertToDTO(userRepository.save(newUser));
     }

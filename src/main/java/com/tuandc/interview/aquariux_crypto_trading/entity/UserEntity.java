@@ -20,6 +20,9 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<TransactionEntity> transactions;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<CryptoCurrencyWalletEntity> cryptoWallets;
+
     private String username;
 
     private BigDecimal walletBalance; // Represents the wallet balance in USDT

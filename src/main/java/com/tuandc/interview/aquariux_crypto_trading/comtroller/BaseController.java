@@ -5,17 +5,22 @@ import com.tuandc.interview.aquariux_crypto_trading.exception.BadParameterExcept
 import com.tuandc.interview.aquariux_crypto_trading.exception.NotFoundEntityException;
 import com.tuandc.interview.aquariux_crypto_trading.model.BaseResponse;
 import com.tuandc.interview.aquariux_crypto_trading.model.StatusCode;
+import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.logging.Level;
+
 @RestController
+@Log
 public class BaseController {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public BaseResponse<Object> handleException(Exception ex) {
+        log.log(Level.SEVERE, ex.getMessage());
         return new BaseResponse<>(StatusCode.SERVER_ERROR, ex.getMessage());
     }
 
