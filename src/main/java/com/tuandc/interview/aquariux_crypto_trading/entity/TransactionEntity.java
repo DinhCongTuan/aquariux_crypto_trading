@@ -31,10 +31,10 @@ public class TransactionEntity {
     private TransactionType transactionType; // BUY or SELL
 
     private BigDecimal amount;
-    private BigDecimal pricePerUnit;
-    private BigDecimal totalPrice;
-    private LocalDateTime timestamp;
 
-    // Getters and setters, constructors
-    // Other relevant fields and methods
+    private BigDecimal pricePerUnit;
+
+    private BigDecimal totalPrice;
+
+    private LocalDateTime timestamp;
 }

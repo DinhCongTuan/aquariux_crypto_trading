@@ -1,9 +1,7 @@
 package com.tuandc.interview.aquariux_crypto_trading.service;
 
 import com.tuandc.interview.aquariux_crypto_trading.entity.PriceAggregationEntity;
-import com.tuandc.interview.aquariux_crypto_trading.model.BinanceSymbol;
-import com.tuandc.interview.aquariux_crypto_trading.model.HuobiData;
-import com.tuandc.interview.aquariux_crypto_trading.model.HuobiSymbol;
+import com.tuandc.interview.aquariux_crypto_trading.model.*;
 import com.tuandc.interview.aquariux_crypto_trading.repository.PriceAggregationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +37,25 @@ public class PriceAggregationService {
         this.houbiUrl = houbiUrl;
     }
 
+    public List<PriceAggregation> getLatestAggregatedPrices() {
+        // Fetch the latest prices for Ethereum and Bitcoin
+        List<PriceAggregationEntity> latestPrices = priceAggregationRepository.findAll();
+
+        // Convert entities to DTOs
+
+        return latestPrices.stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    private PriceAggregation convertToDTO(PriceAggregationEntity entity) {
+        return new PriceAggregation(
+                entity.getCurrencyType(),
+                entity.getBidPrice(),
+                entity.getAskPrice(),
+                entity.getTimestamp());
+    }
+
     @Transactional
     public void processAndStoreAggregatedPrices() {
 
@@ -46,17 +63,17 @@ public class PriceAggregationService {
         Map<String, HuobiSymbol> huobiSymbols = retrievePriceFromHuobi();
 
         // store price for BTC
-        BinanceSymbol binanceBTC = binanceSymbols.get(BTC_USDT);
+        BinanceSymbol binanceBTC = binanceSymbols.get(CurrencyType.BTCUSDT.name());
         HuobiSymbol   huobiBTC   = huobiSymbols.get(BTC_USDT);
-        storeAggregatedPrice(BTC_USDT, binanceBTC, huobiBTC);
+        storeAggregatedPrice(CurrencyType.BTCUSDT, binanceBTC, huobiBTC);
 
         // store price for ETH
         BinanceSymbol binanceETH = binanceSymbols.get(ETH_USDT);
         HuobiSymbol   huobiETH   = huobiSymbols.get(ETH_USDT);
-        storeAggregatedPrice(ETH_USDT, binanceETH, huobiETH);
+        storeAggregatedPrice(CurrencyType.ETHUSDT, binanceETH, huobiETH);
     }
 
-    private void storeAggregatedPrice(String currencyType, BinanceSymbol binanceSymbol, HuobiSymbol huobiSymbol) {
+    private void storeAggregatedPrice(CurrencyType currencyType, BinanceSymbol binanceSymbol, HuobiSymbol huobiSymbol) {
         // Determine the best bid and ask prices (you need to define the logic based on your business rules)
         BigDecimal bestBidPrice = determineBestBidPrice(binanceSymbol.getBidPrice(), huobiSymbol.getBidPrice());
         BigDecimal bestAskPrice = determineBestAskPrice(binanceSymbol.getAskPrice(), huobiSymbol.getAskPrice());
